@@ -66,7 +66,7 @@ module.exports = {
 				await this.worker.addSSHKey(this.sshKeyPath);
 
 				// create tunnels
-				this.log("Creating SSH tunnels to DUT");
+				this.log("Creating SSH tunnels to DUT. this.link is:" + this.link);
 				await this.worker.createSSHTunnels(this.link);
 
 				this.log("Waiting for device to be reachable");

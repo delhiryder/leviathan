@@ -268,7 +268,7 @@ module.exports = class Worker {
 			() => {
 				return doRequest({
 					uri: `${this.url}/dut/ip`,
-					body: { target },
+					body: { target: target },
 					json: true,
 				});
 			},
@@ -284,6 +284,7 @@ module.exports = class Worker {
 		// ip of DUT - used to talk to it
 		// if testbot/local testbot, then we dont wan't the ip, as we use SSH tunneling to talk to it - so return 127.0.0.1
 		// if qemu, return the ip - as we talk to the DUT directly
+    console.log('TESTDEBUG: this.directConnect: ' + this.directConnect);
 		return this.directConnect
 			? this.getDutIp(target)
 			: Promise.resolve(`127.0.0.1`);
@@ -344,6 +345,7 @@ module.exports = class Worker {
 			let config = {};
 			// depending on if the target argument is a .local uuid or not, SSH via the proxy or directly
 			if (/.*\.local/.test(target)) {
+        console.log('TESTDEBUG: target: ' + target);
 				let ip = await this.ip(target);
 				config = {
 					host: ip,
@@ -360,6 +362,8 @@ module.exports = class Worker {
 				console.log(config)
 				command = `host ${target} ${command}`;
 			}
+
+      console.log('TESTDEBUG: command: ' + command + ' config: ' + JSON.stringify(config, null, 2));
 
 			return retry(
 				async () => {
@@ -476,6 +480,7 @@ module.exports = class Worker {
 		];
 		console.log(argsWorker)
 		let tunnelProWorker = spawn(`ssh`, argsWorker);
+    console.log('TESTDEBUG: tunnelProWorker: ' + tunnelProWorker);
 	}
 
 	// create tunnels to relevant DUT ports to we can access them remotely
@@ -498,11 +503,23 @@ module.exports = class Worker {
 			];
 			let tunnelProcClient = spawn(`balena`, argsClient, {stdio: 'inherit'});
 
-			// This short delay is to wait for the balena tunnel to be established
+      // tunnelProcClient.stdout.on('data', (data) => {
+      //   console.log(`TESTDEBUG: tunnelProcClient.stdout: ${data}`);
+      // });
+      //
+      // tunnelProcClient.stderr.on('data', (data) => {
+      //   console.log(`TESTDEBUG: tunnelProcClient.stderr: ${data}`);
+      // });
+      //
+      // tunnelProcClient.on('close', (code) => {
+      //   console.log(`TESTDEBUG: tunnelProcClient exited with code: ${code}`);
+      // });
+      //
+      // This short delay is to wait for the balena tunnel to be established
 			await Bluebird.delay(1000*10)
 
 			for (let port of DUT_PORTS) {
-				console.log(`creating tunnel to dut port ${port}...`);
+				console.log(`creating tunnel to dut target:port ${target}:${port}...`);
 				await this.createTunneltoDUT(target, port, workerPort);
 			}
 		} else {

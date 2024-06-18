@@ -293,6 +293,7 @@ module.exports = class BalenaOS {
 	async configure() {
 		await this.readOsRelease();
 		this.logger.log(`Configuring balenaOS image: ${this.image.input}`);
+    this.logger.log('TESTDEBUG: this.configJson: ' + JSON.stringify(this.configJson, null, 2));
 		if (this.configJson) {
 			await injectBalenaConfiguration(this.image.path, this.configJson, this.bootPartition);
 		}
