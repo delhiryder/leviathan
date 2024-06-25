@@ -7,48 +7,67 @@
 
 module.exports = [
 	{
-		// Device under test (DUT) name goes here
-		deviceType: "beaglebone-black",
 
-		// Suite name goes here
-		suite: `${__dirname}/../suites/e2e`,
-    // suite: `${__dirname}/../suites/os`,
+    deviceType: "raspberrypi4-64", // replace this with your device type slug. A contract must exist for this in the leviathan/core/contracts submodule.
+    // suite: `${__dirname}/../suites/e2e`,
+    suite: `${__dirname}/../suites/os`,
     config: {
+      networkWired: true,
+      networkWireless: false,
+      downloadVersion: 'latest',
+      balenaApiKey: process.env.BALENACLOUD_API_KEY, // this must be the api key that matches the "organization" property.
+      balenaApiUrl: 'balena-cloud.com',
+      organization: process.env.BALENACLOUD_ORG,
+    },
+    debug: {
+      unstable: ["Kill the device under test"],
+    },
+   image: `${__dirname}/balena-cloud-leviathan-DUT-Rpi4-64-raspberrypi4-64-5.3.7+rev2-v16.3.5.img.zip`, // can also set image: false to auto download - only if the image is aailable through balena cloud
+    // image: false, // can also set image: false to auto download - only if the image is available through balena cloud
+    workers: ['https://04ff3a800eeeddf9ac0c8b9789328c73.balena-devices.com/'], // or local ip address of the autokit (recommended)
 
-			// Network configuration for the DUT
-			networkWired: true,
-			networkWireless: false,
-
-			// For tests that need a specific balenaOS version to be downloaded. Default: latest
-			downloadVersion: 'latest',
-
-			// Needed the provision the DUT to a balenaCloud fleet
-			balenaApiKey: process.env.BALENACLOUD_API_KEY,
-			balenaApiUrl: 'balena-cloud.com',
-			organization: process.env.BALENACLOUD_ORG,
-		},
-
-		// Path to the gzipped image to be tested goes here. This image is used to provision the DUT
-		image: `${__dirname}/balena-image-flasher-beagleplay-20240613184316.rootfs.balenaos-img.gz`,
-
-		// Worker configuration: Pointing to a Fleet
-		// https://balena-os.github.io/leviathan/pages/Getting-Started/config-reference.html#different-workers-configurations-available
-		workers: ['https://04ff3a800eeeddf9ac0c8b9789328c73.balena-devices.com/'],
-    //   {
-		// 	balenaApplication: 'testbot-personal',
-		// 	apiKey: process.env.BALENACLOUD_API_KEY
-		// },
-
-		debug: {
-			// Exit the ongoing test suite if a test fails
-			failFast: true,
-			// Exit the ongoing test run if a test fails
-			globalFailFast: true,
-			// Persist downloadeded artifacts
-			preserveDownloads: true,
-			// Mark unstable tests to be skipped
-			unstable: ["Kill the device under test"],
-		},
+	// 	// Device under test (DUT) name goes here
+	// 	deviceType: "beaglebone-black",
+  //
+	// 	// Suite name goes here
+	// 	suite: `${__dirname}/../suites/e2e`,
+  //   // suite: `${__dirname}/../suites/os`,
+  //   config: {
+  //
+	// 		// Network configuration for the DUT
+	// 		networkWired: true,
+	// 		networkWireless: false,
+  //
+	// 		// For tests that need a specific balenaOS version to be downloaded. Default: latest
+	// 		downloadVersion: 'latest',
+  //
+	// 		// Needed the provision the DUT to a balenaCloud fleet
+	// 		balenaApiKey: process.env.BALENACLOUD_API_KEY,
+	// 		balenaApiUrl: 'balena-cloud.com',
+	// 		organization: process.env.BALENACLOUD_ORG,
+	// 	},
+  //
+	// 	// Path to the gzipped image to be tested goes here. This image is used to provision the DUT
+	// 	image: `${__dirname}/balena-image-flasher-beagleplay-20240613184316.rootfs.balenaos-img.gz`,
+  //
+	// 	// Worker configuration: Pointing to a Fleet
+	// 	// https://balena-os.github.io/leviathan/pages/Getting-Started/config-reference.html#different-workers-configurations-available
+	// 	workers: ['https://04ff3a800eeeddf9ac0c8b9789328c73.balena-devices.com/'],
+  //   //   {
+	// 	// 	balenaApplication: 'testbot-personal',
+	// 	// 	apiKey: process.env.BALENACLOUD_API_KEY
+	// 	// },
+  //
+	// 	debug: {
+	// 		// Exit the ongoing test suite if a test fails
+	// 		failFast: true,
+	// 		// Exit the ongoing test run if a test fails
+	// 		globalFailFast: true,
+	// 		// Persist downloadeded artifacts
+	// 		preserveDownloads: true,
+	// 		// Mark unstable tests to be skipped
+	// 		unstable: ["Kill the device under test"],
+	// 	},
 	},
 	//
 	// {
